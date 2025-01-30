@@ -1,6 +1,8 @@
 import swaggerJSDoc from 'swagger-jsdoc';
 
-export const swaggerOptions = (port: number): swaggerJSDoc.Options => ({
+export const swaggerOptions = (
+  port: number | string
+): swaggerJSDoc.Options => ({
   definition: {
     openapi: '3.0.0',
     info: {

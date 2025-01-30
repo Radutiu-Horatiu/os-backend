@@ -10,7 +10,7 @@ import { userIdAuth } from './middlewares/user';
 import { swaggerOptions } from './swaggerOptions';
 
 const app = express();
-const port = 3333;
+const port = process.env.PORT || 3333;
 
 const swaggerDocs = swaggerJSDoc(swaggerOptions(port));
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
