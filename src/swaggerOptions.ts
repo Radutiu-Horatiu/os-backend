@@ -13,17 +13,17 @@ export const swaggerOptions = (
     components: {
       schemas: {},
       securitySchemes: {
-        UserIdAuth: {
+        WalletAddressAuth: {
           type: 'apiKey',
           in: 'header',
-          name: 'x-user-id',
+          name: 'x-wallet-address',
           description: 'User ID for authentication',
         },
       },
     },
     security: [
       {
-        UserIdAuth: [],
+        WalletAddressAuth: [],
       },
     ],
   },

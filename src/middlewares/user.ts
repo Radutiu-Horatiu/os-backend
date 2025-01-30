@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 
-export const userIdAuth = (req: Request, res: Response, next: NextFunction) => {
-  const userId = req.headers['x-user-id'];
+export const walletAddressAuth = (req: Request, res: Response, next: NextFunction) => {
+  const userId = req.headers['x-wallet-address'];
 
   if (!userId) return res.status(401).json({ error: 'ID is missing' });
 

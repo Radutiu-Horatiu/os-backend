@@ -6,7 +6,7 @@ import swaggerJSDoc from 'swagger-jsdoc';
 
 import './lib/db';
 import userRoutes from './routes/user';
-import { userIdAuth } from './middlewares/user';
+import { walletAddressAuth } from './middlewares/user';
 import { swaggerOptions } from './swaggerOptions';
 
 const app = express();
@@ -19,8 +19,8 @@ app.use(express.json());
 app.use(express.raw({ type: 'application/vnd.custom-type' }));
 app.use(express.text({ type: 'text/html' }));
 
-userRoutes.use(userIdAuth);
-app.use('/users', userRoutes);
+userRoutes.use(walletAddressAuth);
+app.use('/user', userRoutes);
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
