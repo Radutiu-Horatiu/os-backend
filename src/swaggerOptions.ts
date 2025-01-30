@@ -26,12 +26,6 @@ export const swaggerOptions = (
         UserIdAuth: [],
       },
     ],
-    servers: [
-      {
-        url: `http://localhost:${port}`,
-        description: 'Dev',
-      },
-    ],
   },
   apis: ['./src/routes/*.ts'], // Make sure this path is correct
 });
