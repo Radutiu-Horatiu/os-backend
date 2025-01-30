@@ -19,6 +19,7 @@
 npm-debug.log*
 
 # local env files
+.env
 .env.local
 .env.development.local
 .env.test.local
@@ -26,5 +27,3 @@ npm-debug.log*
 
 # out dir
 dist/
-
-.env
