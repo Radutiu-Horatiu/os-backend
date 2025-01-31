@@ -1,11 +1,14 @@
+import { v4 as uuid } from 'uuid';
+
 import { IHit } from '../models/user';
 
-export const generateHits = (number: number): IHit[] => {
-  return Array.from({ length: number }, () => {
-    const value = Math.floor(Math.random() * 1000 + 100 + 0.01);
-
-    return {
-      value,
-    };
-  });
-};
+export const generateHits = (
+  number: number,
+  currentUserPoints: number = 0
+): IHit[] =>
+  Array.from({ length: number }, () => ({
+    id: uuid(),
+    value: Math.floor(
+      Math.random() * 1000 + 100 + 0.01 + currentUserPoints * 0.05
+    ),
+  }));

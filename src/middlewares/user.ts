@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 
 export const walletAddressAuth = (req: Request, res: Response, next: NextFunction) => {
-  const userId = req.headers['x-wallet-address'];
+  const walletAddress = req.headers['x-wallet-address'];
 
-  if (!userId) return res.status(401).json({ error: 'ID is missing' });
+  if (!walletAddress) return res.status(401).json({ error: 'Wallet address is missing' });
 
   next();
 };

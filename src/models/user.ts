@@ -1,6 +1,10 @@
 import { model, Schema, Document } from 'mongoose';
 
 const HitSchema = new Schema({
+  id: {
+    type: String,
+    required: true,
+  },
   value: {
     type: Number,
     default: 0,
@@ -8,6 +12,7 @@ const HitSchema = new Schema({
 });
 
 interface IHit {
+  id: string;
   value: number;
 }
 
@@ -16,6 +21,8 @@ interface IUser extends Document {
   walletAddress: string;
   claimedPoints: number;
   unclaimedPoints: number;
+  avatar: string;
+  scene: string;
   hits: IHit[];
 }
 
@@ -35,6 +42,14 @@ const UserSchema = new Schema({
   unclaimedPoints: {
     type: Number,
     default: 0,
+  },
+  avatar: {
+    type: String,
+    default: null,
+  },
+  scene: {
+    type: String,
+    default: null,
   },
   hits: [HitSchema],
 });
