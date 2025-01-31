@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { v4 as uuid } from 'uuid';
 
 import { UserModel, IUser, IHit } from '../models/user';
 import { generateHits } from '../utils/hits';
@@ -11,20 +12,39 @@ const routes = Router();
  * @swagger
  * /user:
  *    get:
- *     summary: Retrieves one user by wallet address
+ *     summary: Retrieves one user by wallet address or creates a new one if it doesn't exist
  *     tags: [Users]
  *     responses:
  *       200:
  *         description: The user
+ *       201:
+ *         description: New user created
+ *       400:
+ *         description: Wallet address not provided
+ *       500:
+ *         description: Sorry, something went wrong :/
  */
 routes.get('/', async (req, res) => {
   try {
     const walletAddress = req.headers['x-wallet-address'];
 
-    const user: IUser | null = await UserModel.findOne({
+    if (!walletAddress)
+      return res.status(400).json({ error: 'Wallet address not provided' });
+
+    let user: IUser | null = await UserModel.findOne({
       walletAddress,
     }).exec();
-    if (!user) return res.status(404).json({ error: 'User not found' });
+
+    if (!user) {
+      // Create a new user if not found
+      user = new UserModel({
+        walletAddress,
+        id: uuid(),
+        hits: generateHits(HITS_PER_USER),
+      });
+      await user.save();
+      return res.status(201).json(user);
+    }
 
     if (user.hits.length < HITS_PER_USER) {
       const newHits = generateHits(
@@ -36,44 +56,6 @@ routes.get('/', async (req, res) => {
     }
 
     return res.json(user);
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: 'Sorry, something went wrong :/' });
-  }
-});
-
-/**
- * @swagger
- * /user:
- *  post:
- *    summary: Create a new user
- *    tags: [Users]
- *    responses:
- *      200:
- *        description: User created
- *      400:
- *        description: User already exists
- *      500:
- *        description: Sorry, something went wrong :/
- */
-routes.post('/', async (req, res) => {
-  try {
-    const walletAddress = req.headers['x-wallet-address'];
-
-    const user: IUser | null = await UserModel.findOne({
-      walletAddress,
-    }).exec();
-
-    if (user) return res.status(400).json({ error: 'User already exists' });
-
-    const newUser = new UserModel({
-      walletAddress,
-      hits: generateHits(HITS_PER_USER),
-    });
-
-    await newUser.save();
-
-    return res.json(newUser);
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: 'Sorry, something went wrong :/' });

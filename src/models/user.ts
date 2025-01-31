@@ -17,6 +17,7 @@ interface IHit {
 }
 
 interface IUser extends Document {
+  id: string;
   createdAt: string;
   walletAddress: string;
   claimedPoints: number;
@@ -27,6 +28,11 @@ interface IUser extends Document {
 }
 
 const UserSchema = new Schema({
+  id: {
+    type: String,
+    unique: true,
+    required: true,
+  },
   createdAt: {
     type: Date,
     default: Date.now,
@@ -34,6 +40,7 @@ const UserSchema = new Schema({
   walletAddress: {
     type: String,
     required: true,
+    unique: true,
   },
   claimedPoints: {
     type: Number,
