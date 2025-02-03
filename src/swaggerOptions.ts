@@ -1,8 +1,6 @@
 import swaggerJSDoc from 'swagger-jsdoc';
 
-export const swaggerOptions = (
-  port: number | string
-): swaggerJSDoc.Options => ({
+export const swaggerOptions = (): swaggerJSDoc.Options => ({
   definition: {
     openapi: '3.0.0',
     info: {
@@ -19,11 +17,18 @@ export const swaggerOptions = (
           name: 'x-wallet-address',
           description: 'User ID for authentication',
         },
+        ApiKeyAuth: {
+          type: 'apiKey',
+          in: 'header',
+          name: 'x-api-key',
+          description: 'API Key for authentication',
+        },
       },
     },
     security: [
       {
         WalletAddressAuth: [],
+        ApiKeyAuth: [],
       },
     ],
   },
