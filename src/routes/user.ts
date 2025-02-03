@@ -157,7 +157,16 @@ routes.post('/hits', async (req, res) => {
     hitsToRemove.forEach((hit) => {
       const index = user.hits.findIndex((userHit) => userHit.id === hit.id);
       if (index !== -1) {
+        const hitValue = user.hits[index].value;
+
+        if (hitValue !== hit.value) {
+          return res.status(400).json({
+            error: 'Hit value does not match the value in the database',
+          });
+        }
+
         totalValue += user.hits[index].value;
+
         user.hits.splice(index, 1);
       }
     });

@@ -8,7 +8,5 @@ export const generateHits = (
 ): IHit[] =>
   Array.from({ length: number }, () => ({
     id: uuid(),
-    value: Math.floor(
-      Math.random() * 1000 + 100 + 0.01 + currentUserPoints * 0.05
-    ),
+    value: Math.floor(Math.random() * 100 + 0.01 + currentUserPoints * 0.05),
   }));
