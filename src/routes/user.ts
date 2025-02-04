@@ -325,11 +325,10 @@ routes.post('/finalize_transfer', async (req, res) => {
 
     if (!transfer) return res.status(404).json({ error: 'Transfer not found' });
 
-    if (transfer.completed)
+    if (transfer.signature)
       return res.status(400).json({ error: 'Transfer already completed' });
 
     // update transfer
-    transfer.completed = true;
     transfer.signature = signature;
     await transfer.save();
 
