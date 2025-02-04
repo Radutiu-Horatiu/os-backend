@@ -55,9 +55,10 @@ routes.get('/claim_tokens', async (req, res) => {
   try {
     const walletAddress: string = req.headers['x-wallet-address'] as string;
 
-    let user: IUser | null = await UserModel.findOne({
-      walletAddress,
-    }).exec();
+    const [user, userTokenBalance] = await Promise.all([
+      UserModel.findOne({ walletAddress }).exec(),
+      getUserTokenBalance(walletAddress),
+    ]);
 
     if (!user) return res.status(404).json({ error: 'User not found.' });
 
@@ -65,7 +66,7 @@ routes.get('/claim_tokens', async (req, res) => {
       return res.status(400).json({ error: 'No unclaimed points.' });
 
     // Points limit
-    if (user.points > 2000000)
+    if (userTokenBalance > 1500000)
       return res.status(400).json({ error: 'Points limit reached.' });
 
     // prepare new transfer
