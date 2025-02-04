@@ -17,20 +17,13 @@ export const swaggerOptions = (): swaggerJSDoc.Options => ({
           name: 'x-wallet-address',
           description: 'User ID for authentication',
         },
-        ApiKeyAuth: {
-          type: 'apiKey',
-          in: 'header',
-          name: 'x-api-key',
-          description: 'API Key for authentication',
-        },
       },
     },
     security: [
       {
         WalletAddressAuth: [],
-        ApiKeyAuth: [],
       },
     ],
   },
-  apis: ['./src/routes/*.ts'], // Make sure this path is correct
+  apis: ['./src/routes/*.ts'],
 });

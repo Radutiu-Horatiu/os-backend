@@ -70,3 +70,48 @@ export const sendTokens = async (transactions: ITransfer[]) => {
   console.log('✅ Batch Transaction Sent! Signature:', signature);
   return signature;
 };
+
+// Function to prepare token transaction
+export const prepareTokenTransaction = async (transferData: ITransfer) => {
+  const { address, amount } = transferData;
+
+  const recipient = new PublicKey(address);
+
+  // Get or create associated token accounts
+  const senderTokenAccount = await getOrCreateAssociatedTokenAccount(
+    connection,
+    payer,
+    TOKEN_MINT_ADDRESS,
+    payer.publicKey
+  );
+  const recipientTokenAccount = await getOrCreateAssociatedTokenAccount(
+    connection,
+    payer,
+    TOKEN_MINT_ADDRESS,
+    recipient
+  );
+
+  // Create transfer instruction
+  const transferInstruction = createTransferInstruction(
+    senderTokenAccount.address,
+    recipientTokenAccount.address,
+    payer.publicKey,
+    amount * 10 ** 9 // 9 decimals
+  );
+
+  // Create transaction
+  const transaction = new Transaction().add(transferInstruction);
+
+  // Fetch recent blockhash
+  const { blockhash } = await connection.getLatestBlockhash();
+  transaction.recentBlockhash = blockhash;
+  transaction.feePayer = recipient; // B pays the fees
+
+  // A partially signs the transaction
+  transaction.partialSign(payer);
+
+  // Serialize transaction for frontend
+  return transaction
+    .serialize({ requireAllSignatures: false })
+    .toString('base64');
+};

@@ -7,11 +7,9 @@ import swaggerJSDoc from 'swagger-jsdoc';
 
 import './lib/db';
 import { walletAddressAuth } from './middlewares/user';
-import { apiKeyAuth } from './middlewares/transfer';
 import { swaggerOptions } from './swaggerOptions';
 
 import userRoutes from './routes/user';
-import transferRoutes from './routes/transfer';
 
 const app = express();
 const port = process.env.PORT || 3333;
@@ -27,7 +25,6 @@ app.use(express.raw({ type: 'application/vnd.custom-type' }));
 app.use(express.text({ type: 'text/html' }));
 
 app.use('/user', walletAddressAuth, userRoutes);
-app.use('/transfer', apiKeyAuth, transferRoutes);
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
