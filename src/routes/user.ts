@@ -59,10 +59,14 @@ routes.get('/claim_tokens', async (req, res) => {
       walletAddress,
     }).exec();
 
-    if (!user) return res.status(404).json({ error: 'User not found' });
+    if (!user) return res.status(404).json({ error: 'User not found.' });
 
     if (user.points <= 0)
-      return res.status(400).json({ error: 'No unclaimed points' });
+      return res.status(400).json({ error: 'No unclaimed points.' });
+
+    // Points limit
+    if (user.points > 2000000)
+      return res.status(400).json({ error: 'Points limit reached.' });
 
     // prepare new transfer
     const transferId = uuid();
