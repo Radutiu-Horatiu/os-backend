@@ -34,7 +34,14 @@ const swaggerDocs = swaggerJSDoc(swaggerOptions());
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // CORS
-app.use(cors({ origin: process.env.ALLOWED_ORIGIN }));
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (origin === process.env.ALLOWED_ORIGIN) callback(null, true);
+      else callback(new Error('Not allowed by CORS'));
+    },
+  })
+);
 
 // Middleware
 app.use(express.json());
