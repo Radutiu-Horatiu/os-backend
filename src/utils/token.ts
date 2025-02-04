@@ -117,7 +117,7 @@ export const prepareTokenTransaction = async (transferData: ITransfer) => {
 };
 
 // Function to get user token balance
-export const getUserTokenBalance = async (address: string) => {
+export const getUserWalletTokenBalance = async (address: string) => {
   try {
     const userTokenAccount = await getOrCreateAssociatedTokenAccount(
       connection,

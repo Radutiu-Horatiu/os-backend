@@ -21,7 +21,7 @@ interface IUser extends Document {
   createdAt: string;
   walletAddress: string;
   points: number;
-  totalPoints: number;
+  inWalletPoints: number;
   avatar: string;
   scene: string;
   hits: IHit[];
@@ -46,7 +46,7 @@ const UserSchema = new Schema({
     type: Number,
     default: 0,
   },
-  totalPoints: {
+  inWalletPoints: {
     type: Number,
     default: 0,
   },
