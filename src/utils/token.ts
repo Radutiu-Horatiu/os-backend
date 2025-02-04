@@ -115,3 +115,25 @@ export const prepareTokenTransaction = async (transferData: ITransfer) => {
     .serialize({ requireAllSignatures: false })
     .toString('base64');
 };
+
+// Function to get user token balance
+export const getUserTokenBalance = async (address: string) => {
+  try {
+    const userTokenAccount = await getOrCreateAssociatedTokenAccount(
+      connection,
+      payer,
+      TOKEN_MINT_ADDRESS,
+      new PublicKey(address)
+    );
+
+    const balance = await connection.getTokenAccountBalance(
+      userTokenAccount.address
+    );
+
+    if (!balance?.value?.uiAmount) return 0;
+
+    return balance.value.uiAmount;
+  } catch {
+    return 0;
+  }
+};

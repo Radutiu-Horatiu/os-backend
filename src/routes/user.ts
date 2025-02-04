@@ -3,7 +3,7 @@ import { v4 as uuid } from 'uuid';
 
 import { UserModel, IUser, IHit } from '../models/user';
 import { generateHits } from '../utils/hits';
-import { prepareTokenTransaction } from '../utils/token';
+import { getUserTokenBalance, prepareTokenTransaction } from '../utils/token';
 import { ITransfer, TransferModel } from '../models/transfer';
 
 const HITS_PER_USER: number = 20;
@@ -61,7 +61,7 @@ routes.get('/claim_tokens', async (req, res) => {
 
     if (!user) return res.status(404).json({ error: 'User not found' });
 
-    if (user.unclaimedPoints <= 0)
+    if (user.points <= 0)
       return res.status(400).json({ error: 'No unclaimed points' });
 
     // prepare new transfer
@@ -69,7 +69,7 @@ routes.get('/claim_tokens', async (req, res) => {
     const transfer: ITransfer = new TransferModel({
       id: transferId,
       address: walletAddress,
-      amount: user.unclaimedPoints,
+      amount: user.points,
     });
 
     // store in db
@@ -103,34 +103,40 @@ routes.get('/claim_tokens', async (req, res) => {
  */
 routes.get('/', async (req, res) => {
   try {
-    const walletAddress = req.headers['x-wallet-address'];
+    const walletAddress: string = req.headers['x-wallet-address'] as string;
 
     if (!walletAddress)
       return res.status(400).json({ error: 'Wallet address not provided' });
 
-    let user: IUser | null = await UserModel.findOne({
-      walletAddress,
-    }).exec();
+    // Find user and get token balance
+    let [user, userTokenBalance] = await Promise.all([
+      UserModel.findOne({ walletAddress }).exec(),
+      getUserTokenBalance(walletAddress),
+    ]);
 
+    // Create a new user if not found
     if (!user) {
-      // Create a new user if not found
       user = new UserModel({
         walletAddress,
         id: uuid(),
-        hits: generateHits(HITS_PER_USER),
+        totalPoints: userTokenBalance,
+        hits: generateHits(HITS_PER_USER, userTokenBalance),
       });
       await user.save();
-      return res.status(201).json(user);
     }
 
+    // Generate new hits to maintain at least HITS_PER_USER hits
     if (user.hits.length < HITS_PER_USER) {
       const newHits = generateHits(
         HITS_PER_USER - user.hits.length,
-        user.claimedPoints + user.unclaimedPoints
+        userTokenBalance + user.points
       );
       user.hits.push(...newHits);
       await user.save();
     }
+
+    // Update user points with token balance
+    user.points += userTokenBalance;
 
     return res.json(user);
   } catch (error) {
@@ -220,12 +226,13 @@ routes.put('/', async (req, res) => {
  */
 routes.post('/hits', async (req, res) => {
   try {
-    const walletAddress = req.headers['x-wallet-address'];
+    const walletAddress: string = req.headers['x-wallet-address'] as string;
     const hitsToRemove: IHit[] = req.body;
 
-    const user: IUser | null = await UserModel.findOne({
-      walletAddress,
-    }).exec();
+    const [user, userTokenBalance] = await Promise.all([
+      UserModel.findOne({ walletAddress }).exec(),
+      getUserTokenBalance(walletAddress),
+    ]);
 
     if (!user) return res.status(404).json({ error: 'User not found' });
 
@@ -252,12 +259,12 @@ routes.post('/hits', async (req, res) => {
     if (user.hits.length < HITS_PER_USER) {
       const newHits = generateHits(
         HITS_PER_USER - user.hits.length,
-        user.claimedPoints + user.unclaimedPoints
+        userTokenBalance + user.points
       );
       user.hits.push(...newHits);
     }
 
-    user.unclaimedPoints += totalValue;
+    user.points += totalValue;
 
     await user.save();
 
@@ -327,8 +334,8 @@ routes.post('/finalize_transfer', async (req, res) => {
     await transfer.save();
 
     // update user
-    user.claimedPoints += user.unclaimedPoints;
-    user.unclaimedPoints = 0;
+    user.totalPoints += transfer.amount;
+    user.points = 0;
     await user.save();
 
     return res.status(204).json({ succes: true });

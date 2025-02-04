@@ -20,8 +20,8 @@ interface IUser extends Document {
   id: string;
   createdAt: string;
   walletAddress: string;
-  claimedPoints: number;
-  unclaimedPoints: number;
+  points: number;
+  totalPoints: number;
   avatar: string;
   scene: string;
   hits: IHit[];
@@ -42,11 +42,11 @@ const UserSchema = new Schema({
     required: true,
     unique: true,
   },
-  claimedPoints: {
+  points: {
     type: Number,
     default: 0,
   },
-  unclaimedPoints: {
+  totalPoints: {
     type: Number,
     default: 0,
   },
