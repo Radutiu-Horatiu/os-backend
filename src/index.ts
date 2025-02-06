@@ -17,7 +17,7 @@ const app = express();
 const port = process.env.PORT || 3333;
 
 // Trust the first proxy
-app.set('trust proxy', 1);
+if (process.env.ENVIRONMENT !== 'LOCAL') app.set('trust proxy', 1);
 
 // Configure rate limiting
 const limiter = rateLimit({
