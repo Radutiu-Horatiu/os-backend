@@ -16,6 +16,9 @@ import userRoutes from './routes/user';
 const app = express();
 const port = process.env.PORT || 3333;
 
+// Trust the first proxy
+app.set('trust proxy', 1);
+
 // Configure rate limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
