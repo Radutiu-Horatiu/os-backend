@@ -12,6 +12,7 @@ import { walletAddressAuth } from './middlewares/user';
 import { swaggerOptions } from './swaggerOptions';
 
 import userRoutes from './routes/user';
+import appRoutes from './routes/app';
 
 const app = express();
 const port = process.env.PORT || 3333;
@@ -40,7 +41,11 @@ app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (origin === process.env.ALLOWED_ORIGIN) callback(null, true);
+      if (
+        process.env.ENVIRONMENT === 'LOCAL' ||
+        origin === process.env.ALLOWED_ORIGIN
+      )
+        callback(null, true);
       else callback(new Error('Not allowed by CORS'));
     },
   })
@@ -53,6 +58,7 @@ app.use(express.text({ type: 'text/html' }));
 
 // Routes
 app.use('/user', walletAddressAuth, userRoutes);
+app.use('/app', appRoutes);
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
