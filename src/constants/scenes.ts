@@ -5,7 +5,7 @@ export interface Scene {
   name: string;
   src: string;
   description: string[];
-  points?: number;
+  points: number;
 }
 
 export const scenes: Scene[] = [
@@ -18,6 +18,7 @@ export const scenes: Scene[] = [
       'Unlimited overtime, zero bathroom breaks. 🚽',
       '"Robots are the future. Humans? Meh." 🤖',
     ],
+    points: 0,
   },
   {
     id: 'mcdonalds',
@@ -28,6 +29,7 @@ export const scenes: Scene[] = [
       'The ultimate showdown between hangovers and regret. 🤢',
       'A love story in every greasy bite. 💖🍔',
     ],
+    points: 0,
   },
   {
     id: 'india',
@@ -38,6 +40,7 @@ export const scenes: Scene[] = [
       '"Thank you for calling tech support!" 💻',
       'Where chaos and spice is life. 🌶️✨',
     ],
+    points: 0,
   },
   {
     id: 'church',
@@ -48,6 +51,7 @@ export const scenes: Scene[] = [
       'The only place where wine is blood, and bread is flesh. 🍷🍞',
       'The original cult, now with more gold and less honesty. ✨🕍',
     ],
+    points: 0,
   },
   {
     id: 'couch',
@@ -58,6 +62,7 @@ export const scenes: Scene[] = [
       'Where dreams are made... and dignity is often misplaced. 💔✨',
       'If this couch could talk, it would be age-restricted. 🔞',
     ],
+    points: 0,
   },
   {
     id: 'american',
@@ -68,6 +73,7 @@ export const scenes: Scene[] = [
       "It's the land of opportunity, unless you're stuck in this zip code. 💸",
       'Chasing the dream, but keeps running faster than you. 🇺🇸💤',
     ],
+    points: 0,
   },
   {
     id: 'korea',
@@ -78,6 +84,7 @@ export const scenes: Scene[] = [
       "The happiest place on earth—because it's mandatory. 😊🔫",
       'Nukes are big, but egos are bigger. 💣✈️',
     ],
+    points: 0,
   },
   {
     id: 'carnival',
@@ -88,6 +95,7 @@ export const scenes: Scene[] = [
       'Cotton candy? More like asbestos-flavored mystery fluff. 🍬😵',
       "Step right up! You might leave, but your sanity won't. 🤡👻",
     ],
+    points: 0,
   },
   {
     id: 'mars',
@@ -98,6 +106,7 @@ export const scenes: Scene[] = [
       '"Red planet, no unions." 🌌',
       "Population: 1 Tesla 'No Panic'. 🛸",
     ],
+    points: 0,
   },
   {
     id: 'powerplant',
@@ -108,6 +117,7 @@ export const scenes: Scene[] = [
       'Blowing things up since... always. 💥🎇',
       'Mutants welcome! Bring your own hazmat suit. 👽🧪',
     ],
+    points: 0,
   },
   {
     id: 'cotton',
@@ -118,6 +128,7 @@ export const scenes: Scene[] = [
       'Bounty hunting: where the real work gets done. 🔫💼',
       'More entrances than a western showdown. 🏇💨',
     ],
+    points: 0,
   },
   {
     id: 'egypt',
@@ -128,6 +139,7 @@ export const scenes: Scene[] = [
       'Mummies, pharaohs, and the occasional tourist trap. 💀📸',
       'The only place where sand is worth more than gold. 🏜️💰',
     ],
+    points: 0,
   },
   {
     id: 'area51',
@@ -138,6 +150,7 @@ export const scenes: Scene[] = [
       "Aliens are real, but Wi-Fi isn't. 🛸📶",
       "Welcome to Nevada's worst-kept secret. 🤐🔭",
     ],
+    points: 0,
   },
   {
     id: 'florida',
@@ -148,6 +161,7 @@ export const scenes: Scene[] = [
       "Where the weather's hot, but the crimes are hotter. 🚓🔥",
       "Birthplace of legends, aka the Internet's wildest headlines. 🌴🤪",
     ],
+    points: 0,
   },
   {
     id: 'prison',
@@ -158,6 +172,7 @@ export const scenes: Scene[] = [
       "Welcome to paradise—if you're into cement and bad tattoos. 💀🖋️",
       'Not much freedom, but plenty of drama. 🎭🚪',
     ],
+    points: 0,
   },
   {
     id: 'hell',
@@ -168,6 +183,7 @@ export const scenes: Scene[] = [
       'The only place where the devil is the good guy. 😈👼',
       'Welcome to the eternal vacation you never asked for. 🌋🏖️',
     ],
+    points: 0,
   },
   {
     id: 'playground',
@@ -178,6 +194,7 @@ export const scenes: Scene[] = [
       'Secluded paradise turned into a stage for nightmares. 🌴⚖️',
       'Proof that the worst monsters wear suits, not masks. 👔💀',
     ],
+    points: 0,
   },
   {
     id: 'dubai',
@@ -188,6 +205,7 @@ export const scenes: Scene[] = [
       'Gold-plated everything, except for human rights. ✨💰',
       'Why settle for a desert when you can turn it into a mall? 🏜️🛍️',
     ],
+    points: 0,
   },
 ].map((el: Scene, i, arr) => {
   el.points = pointsArray(arr.length)[i];

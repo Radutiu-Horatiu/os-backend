@@ -5,9 +5,11 @@ import { UserModel, IUser, IHit } from '../models/user';
 import { generateHits } from '../utils/hits';
 import {
   getUserWalletTokenBalance,
+  prepareBuyTransaction,
   prepareTokenTransaction,
 } from '../utils/token';
 import { ITransfer, TransferModel } from '../models/transfer';
+import { getItemById, ItemResult } from '../utils/items';
 
 const HITS_PER_USER: number = 20;
 
@@ -338,16 +340,123 @@ routes.post('/finalize_transfer', async (req, res) => {
     if (transfer.signature)
       return res.status(400).json({ error: 'Transfer already completed' });
 
+    // transferring an item
+    if (transfer.itemId) {
+      const item = getItemById(transfer.itemId);
+
+      if (!item) return res.status(404).json({ error: 'Item not found' });
+
+      const { data, type }: ItemResult = item;
+
+      if (user[type].includes(data.id))
+        return res.status(400).json({ error: 'Item already bought.' });
+
+      // update in wallet points
+      user[type].push(data.id);
+      user.inWalletPoints -= transfer.amount;
+
+      // update off chain points
+      const pointsFromWalletDeduction = item.data.points - transfer.amount;
+      user.points -= pointsFromWalletDeduction;
+    }
+    // transferring points
+    else {
+      user.inWalletPoints += transfer.amount;
+      user.points = 0;
+    }
+
     // update transfer
     transfer.signature = signature;
-    await transfer.save();
 
-    // update user
-    user.inWalletPoints += transfer.amount;
-    user.points = 0;
+    await transfer.save();
     await user.save();
 
     return res.status(204).json({ succes: true });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Sorry, something went wrong :/' });
+  }
+});
+
+/**
+ * @swagger
+ * /user/buy-item:
+ *   post:
+ *     summary: Buy an item using points
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               itemId:
+ *                 type: string
+ *                 description: The ID of the item to buy
+ *     responses:
+ *       200:
+ *         description: Item bought successfully
+ *       400:
+ *         description: Bad request
+ *       500:
+ *         description: Sorry, something went wrong :/
+ */
+routes.post('/buy-item', async (req, res) => {
+  try {
+    const walletAddress: string = req.headers['x-wallet-address'] as string;
+
+    const { itemId } = req.body;
+
+    const [user, item] = await Promise.all([
+      UserModel.findOne({ walletAddress }).exec(),
+      getItemById(itemId),
+    ]);
+
+    if (!user) return res.status(400).json({ error: 'User not found.' });
+
+    if (!item) return res.status(400).json({ error: 'Item not found.' });
+
+    const { data, type }: ItemResult = item;
+
+    if (user[type].includes(data.id))
+      return res.status(400).json({ error: 'Item already bought.' });
+
+    // not enough total points
+    if (user.points + user.inWalletPoints <= data.points)
+      return res.status(400).json({ error: 'Not enough points.' });
+
+    // buy item with unclaimed points
+    if (user.points >= data.points) {
+      user.points -= data.points;
+      user[type].push(data.id);
+      await user.save();
+      res.json({ transactionNeeded: false });
+    } else {
+      // calculate remaining points needed from inWalletPoints
+      const remainingPoints = data.points - user.points;
+
+      // prepare new transfer to buy with inWalletPoints
+      const transferId = uuid();
+      const transfer: ITransfer = new TransferModel({
+        id: transferId,
+        address: walletAddress,
+        amount: remainingPoints,
+        itemId: data.id,
+      });
+
+      // store in db
+      await transfer.save();
+
+      // partially sign transaction and send back to user
+      const serializedTx = await prepareBuyTransaction(transfer);
+
+      res.json({
+        transactionNeeded: true,
+        transaction: serializedTx,
+        transferId,
+      });
+    }
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: 'Sorry, something went wrong :/' });

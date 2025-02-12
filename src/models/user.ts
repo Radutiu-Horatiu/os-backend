@@ -1,4 +1,6 @@
 import { model, Schema, Document } from 'mongoose';
+import { scenes } from '../constants/scenes';
+import { avatars } from '../constants/avatars';
 
 const HitSchema = new Schema({
   id: {
@@ -25,6 +27,8 @@ interface IUser extends Document {
   avatar: string;
   scene: string;
   hits: IHit[];
+  scenes: string[];
+  avatars: string[];
 }
 
 const UserSchema = new Schema({
@@ -59,6 +63,14 @@ const UserSchema = new Schema({
     default: null,
   },
   hits: [HitSchema],
+  scenes: {
+    type: [String],
+    default: [scenes[0].id],
+  },
+  avatars: {
+    type: [String],
+    default: [avatars[0].id],
+  },
 });
 
 const UserModel = model<IUser>('User', UserSchema);

@@ -6,7 +6,7 @@ export interface Avatar {
   avatarUrl: string;
   src: string;
   description: string[];
-  points?: number;
+  points: number;
 }
 
 export const avatars: Avatar[] = [
@@ -20,6 +20,7 @@ export const avatars: Avatar[] = [
       'Inventor of Space Karen™ and Dogecoin dreams. 🐕',
       'Sends Teslas to space while dodging Twitter lawsuits.',
     ],
+    points: 0,
   },
   {
     id: 'will-smack',
@@ -31,6 +32,7 @@ export const avatars: Avatar[] = [
       'Oscars? No. OnlySlaps? Yes. 🎭',
       'Fresh prince of losing dignity. 👑💔',
     ],
+    points: 0,
   },
   {
     id: 'shamber-turd',
@@ -42,6 +44,7 @@ export const avatars: Avatar[] = [
       'Oscar-winning performance (in her own mind). 🎭',
       "Made Aquaman's biggest villain… her acting. 🌊🚽",
     ],
+    points: 0,
   },
   {
     id: 'kanye-mess',
@@ -53,6 +56,7 @@ export const avatars: Avatar[] = [
       'Drops more hot takes than hit albums. 🎤💀',
       "'I am a genius' - Kanye, after every bad decision. 🧠❌",
     ],
+    points: 0,
   },
   {
     id: 'jeff-bozos',
@@ -64,6 +68,7 @@ export const avatars: Avatar[] = [
       'Fires employees faster than Prime shipping. 🚚🔥',
       'Rocketed to space just to flex on us. 🚀💰',
     ],
+    points: 0,
   },
   {
     id: 'chillary-defeaton',
@@ -75,6 +80,7 @@ export const avatars: Avatar[] = [
       'Lost to Trump and still buffering... 🔄💀',
       'More scandals than a Netflix docuseries. 🎬🔥',
     ],
+    points: 0,
   },
   {
     id: 'joe-forgetful',
@@ -86,6 +92,7 @@ export const avatars: Avatar[] = [
       "America's grandpa—just without the good stories. 👴📖",
       "Reads the teleprompter like it's his first language. 📜🤔",
     ],
+    points: 0,
   },
   {
     id: 'skim-kardashian',
@@ -97,6 +104,7 @@ export const avatars: Avatar[] = [
       'Married Kanye, divorced Kanye, married the algorithm. 🤳💔',
       "Breaks the internet, but can't break a personality. 📸🥱",
     ],
+    points: 0,
   },
   {
     id: 'taylor-overrated',
@@ -108,6 +116,7 @@ export const avatars: Avatar[] = [
       'Switched from country to pop to billion-dollar stadium tours. 🤑🎤',
       'Her exes fear her more than tax season. 📜🔥',
     ],
+    points: 0,
   },
   {
     id: 'mark-zuckerbot',
@@ -119,6 +128,7 @@ export const avatars: Avatar[] = [
       'Not a lizard, just a very, very awkward human. 🦎🤖',
       'Made the Metaverse but wait, who asked for it? 🎮',
     ],
+    points: 0,
   },
   {
     id: 'joke-paul',
@@ -130,6 +140,7 @@ export const avatars: Avatar[] = [
       "Can dodge punches but can't dodge controversy. 🥊🚧",
       'Pranking reality, one viral fail at a time. 📹🤡',
     ],
+    points: 0,
   },
   {
     id: 'queen-lizardbeth',
@@ -141,6 +152,7 @@ export const avatars: Avatar[] = [
       'Never worked a day but owns half the world. 🌍💰',
       'Immortal? Nah, just really, REALLY good at surviving. 🦎⚰️',
     ],
+    points: 0,
   },
   {
     id: 'greta-mchowdareyou',
@@ -152,9 +164,10 @@ export const avatars: Avatar[] = [
       'Screaming at world leaders while flying private jets. 🌍✈️',
       'How dare YOU not recycle my memes?! ♻️😡',
     ],
+    points: 0,
   },
   {
-    id: 'cardib',
+    id: 'cardi-beef',
     name: 'Cardi Beef',
     avatarUrl: `${process.env.CDN_URL}/avatars/cardib.glb`,
     src: `${process.env.CDN_URL}/profiles/cardib.png`,
@@ -163,6 +176,7 @@ export const avatars: Avatar[] = [
       'Claws: her diplomatic passport. 💅🔥',
       'Vocabulistics professor emeritus. 🗣️🤯',
     ],
+    points: 0,
   },
   {
     id: 'top-sparkle',
@@ -174,6 +188,7 @@ export const avatars: Avatar[] = [
       "Bugatti dealers ask: 'What color is YOUR customer?' 🚗😂",
       "1,000 pushups? His warmup's warmup. 💪🌍",
     ],
+    points: 0,
   },
   {
     id: 'boom-laden',
@@ -185,9 +200,10 @@ export const avatars: Avatar[] = [
       'Loves to play hide and seek with the US military. 🏃',
       "Took 'OK Boomer' to a whole new level. 💣",
     ],
+    points: 0,
   },
   {
-    id: 'donald',
+    id: 'donald-duck',
     name: 'Donald Duck',
     avatarUrl: `${process.env.CDN_URL}/avatars/donald.glb`,
     src: `${process.env.CDN_URL}/profiles/donald.png`,
@@ -196,6 +212,7 @@ export const avatars: Avatar[] = [
       'Presidential fact-checking as a full-time job. 💼',
       "Grabs headlines faster than he grabs 'em by the... well, you know. 🐈📰",
     ],
+    points: 0,
   },
 ].map((el: Avatar, i, arr) => {
   el.points = pointsArray(arr.length)[i];
