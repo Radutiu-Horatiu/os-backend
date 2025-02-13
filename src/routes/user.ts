@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { v4 as uuid } from 'uuid';
 
 import { UserModel, IUser, IHit } from '../models/user';
-import { generateHits } from '../utils/hits';
+import { calculateMultiplier, generateHits } from '../utils/hits';
 import {
   getUserWalletTokenBalance,
   prepareBuyTransaction,
@@ -132,25 +132,18 @@ routes.get('/', async (req, res) => {
         walletAddress,
         id: uuid(),
         inWalletPoints: userWalletTokenBalance,
-        hits: generateHits(HITS_PER_USER, userWalletTokenBalance),
+        hits: generateHits(HITS_PER_USER),
       });
-      await user.save();
-    }
-
-    // Generate new hits to maintain at least HITS_PER_USER hits
-    if (user.hits.length < HITS_PER_USER) {
-      const newHits = generateHits(
-        HITS_PER_USER - user.hits.length,
-        userWalletTokenBalance + user.points
-      );
-      user.hits.push(...newHits);
       await user.save();
     }
 
     // Update user points with token balance
     user.points += userWalletTokenBalance;
 
-    return res.json(user);
+    // Convert user document to plain object
+    const userObject = user.toObject();
+
+    return res.json({ ...userObject, multiplier: calculateMultiplier(user) });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: 'Sorry, something went wrong :/' });
@@ -241,10 +234,7 @@ routes.post('/hits', async (req, res) => {
     const walletAddress: string = req.headers['x-wallet-address'] as string;
     const hitsToRemove: IHit[] = req.body;
 
-    const [user, userWalletTokenBalance] = await Promise.all([
-      UserModel.findOne({ walletAddress }).exec(),
-      getUserWalletTokenBalance(walletAddress),
-    ]);
+    const user = await UserModel.findOne({ walletAddress }).exec();
 
     if (!user) return res.status(404).json({ error: 'User not found' });
 
@@ -267,15 +257,10 @@ routes.post('/hits', async (req, res) => {
       }
     });
 
-    // Generate new hits to maintain at least HITS_PER_USER hits
-    if (user.hits.length < HITS_PER_USER) {
-      const newHits = generateHits(
-        HITS_PER_USER - user.hits.length,
-        userWalletTokenBalance + user.points
-      );
-      user.hits.push(...newHits);
-    }
+    // Generate new hits
+    const newHits = generateHits(HITS_PER_USER, calculateMultiplier(user));
 
+    user.hits = newHits;
     user.points += totalValue;
 
     await user.save();

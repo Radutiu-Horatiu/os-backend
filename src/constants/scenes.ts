@@ -1,4 +1,4 @@
-import { pointsArray } from '../utils/generic';
+import { addPointsAndMultiplier, Cosmetic } from '../utils/generic';
 
 export interface Scene {
   id: string;
@@ -6,9 +6,10 @@ export interface Scene {
   src: string;
   description: string[];
   points: number;
+  multiplier: number;
 }
 
-export const scenes: Scene[] = [
+export const scenes: Cosmetic[] = addPointsAndMultiplier([
   {
     id: 'tesla',
     name: 'Tesla F*cktory',
@@ -19,6 +20,7 @@ export const scenes: Scene[] = [
       '"Robots are the future. Humans? Meh." 🤖',
     ],
     points: 0,
+    multiplier: 0,
   },
   {
     id: 'mcdonalds',
@@ -30,6 +32,7 @@ export const scenes: Scene[] = [
       'A love story in every greasy bite. 💖🍔',
     ],
     points: 0,
+    multiplier: 0,
   },
   {
     id: 'india',
@@ -41,6 +44,7 @@ export const scenes: Scene[] = [
       'Where chaos and spice is life. 🌶️✨',
     ],
     points: 0,
+    multiplier: 0,
   },
   {
     id: 'church',
@@ -52,6 +56,7 @@ export const scenes: Scene[] = [
       'The original cult, now with more gold and less honesty. ✨🕍',
     ],
     points: 0,
+    multiplier: 0,
   },
   {
     id: 'couch',
@@ -63,6 +68,7 @@ export const scenes: Scene[] = [
       'If this couch could talk, it would be age-restricted. 🔞',
     ],
     points: 0,
+    multiplier: 0,
   },
   {
     id: 'american',
@@ -74,6 +80,7 @@ export const scenes: Scene[] = [
       'Chasing the dream, but keeps running faster than you. 🇺🇸💤',
     ],
     points: 0,
+    multiplier: 0,
   },
   {
     id: 'korea',
@@ -85,6 +92,7 @@ export const scenes: Scene[] = [
       'Nukes are big, but egos are bigger. 💣✈️',
     ],
     points: 0,
+    multiplier: 0,
   },
   {
     id: 'carnival',
@@ -96,6 +104,7 @@ export const scenes: Scene[] = [
       "Step right up! You might leave, but your sanity won't. 🤡👻",
     ],
     points: 0,
+    multiplier: 0,
   },
   {
     id: 'mars',
@@ -107,6 +116,7 @@ export const scenes: Scene[] = [
       "Population: 1 Tesla 'No Panic'. 🛸",
     ],
     points: 0,
+    multiplier: 0,
   },
   {
     id: 'powerplant',
@@ -118,6 +128,7 @@ export const scenes: Scene[] = [
       'Mutants welcome! Bring your own hazmat suit. 👽🧪',
     ],
     points: 0,
+    multiplier: 0,
   },
   {
     id: 'cotton',
@@ -129,6 +140,7 @@ export const scenes: Scene[] = [
       'More entrances than a western showdown. 🏇💨',
     ],
     points: 0,
+    multiplier: 0,
   },
   {
     id: 'egypt',
@@ -140,6 +152,7 @@ export const scenes: Scene[] = [
       'The only place where sand is worth more than gold. 🏜️💰',
     ],
     points: 0,
+    multiplier: 0,
   },
   {
     id: 'area51',
@@ -151,6 +164,7 @@ export const scenes: Scene[] = [
       "Welcome to Nevada's worst-kept secret. 🤐🔭",
     ],
     points: 0,
+    multiplier: 0,
   },
   {
     id: 'florida',
@@ -162,6 +176,7 @@ export const scenes: Scene[] = [
       "Birthplace of legends, aka the Internet's wildest headlines. 🌴🤪",
     ],
     points: 0,
+    multiplier: 0,
   },
   {
     id: 'prison',
@@ -173,6 +188,7 @@ export const scenes: Scene[] = [
       'Not much freedom, but plenty of drama. 🎭🚪',
     ],
     points: 0,
+    multiplier: 0,
   },
   {
     id: 'hell',
@@ -184,6 +200,7 @@ export const scenes: Scene[] = [
       'Welcome to the eternal vacation you never asked for. 🌋🏖️',
     ],
     points: 0,
+    multiplier: 0,
   },
   {
     id: 'playground',
@@ -195,6 +212,7 @@ export const scenes: Scene[] = [
       'Proof that the worst monsters wear suits, not masks. 👔💀',
     ],
     points: 0,
+    multiplier: 0,
   },
   {
     id: 'dubai',
@@ -206,8 +224,6 @@ export const scenes: Scene[] = [
       'Why settle for a desert when you can turn it into a mall? 🏜️🛍️',
     ],
     points: 0,
+    multiplier: 0,
   },
-].map((el: Scene, i, arr) => {
-  el.points = pointsArray(arr.length)[i];
-  return el;
-});
+]);

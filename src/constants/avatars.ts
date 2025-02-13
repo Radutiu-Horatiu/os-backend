@@ -1,4 +1,4 @@
-import { pointsArray } from '../utils/generic';
+import { addPointsAndMultiplier, Cosmetic } from '../utils/generic';
 
 export interface Avatar {
   id: string;
@@ -7,9 +7,10 @@ export interface Avatar {
   src: string;
   description: string[];
   points: number;
+  multiplier: number;
 }
 
-export const avatars: Avatar[] = [
+export const avatars: Cosmetic[] = addPointsAndMultiplier([
   {
     id: 'memelon-musk',
     name: 'Memelon Musk',
@@ -21,6 +22,7 @@ export const avatars: Avatar[] = [
       'Sends Teslas to space while dodging Twitter lawsuits.',
     ],
     points: 0,
+    multiplier: 0,
   },
   {
     id: 'will-smack',
@@ -33,6 +35,7 @@ export const avatars: Avatar[] = [
       'Fresh prince of losing dignity. 👑💔',
     ],
     points: 0,
+    multiplier: 0,
   },
   {
     id: 'shamber-turd',
@@ -45,6 +48,7 @@ export const avatars: Avatar[] = [
       "Made Aquaman's biggest villain… her acting. 🌊🚽",
     ],
     points: 0,
+    multiplier: 0,
   },
   {
     id: 'kanye-mess',
@@ -57,6 +61,7 @@ export const avatars: Avatar[] = [
       "'I am a genius' - Kanye, after every bad decision. 🧠❌",
     ],
     points: 0,
+    multiplier: 0,
   },
   {
     id: 'jeff-bozos',
@@ -69,6 +74,7 @@ export const avatars: Avatar[] = [
       'Rocketed to space just to flex on us. 🚀💰',
     ],
     points: 0,
+    multiplier: 0,
   },
   {
     id: 'chillary-defeaton',
@@ -81,6 +87,7 @@ export const avatars: Avatar[] = [
       'More scandals than a Netflix docuseries. 🎬🔥',
     ],
     points: 0,
+    multiplier: 0,
   },
   {
     id: 'joe-forgetful',
@@ -93,6 +100,7 @@ export const avatars: Avatar[] = [
       "Reads the teleprompter like it's his first language. 📜🤔",
     ],
     points: 0,
+    multiplier: 0,
   },
   {
     id: 'skim-kardashian',
@@ -105,6 +113,7 @@ export const avatars: Avatar[] = [
       "Breaks the internet, but can't break a personality. 📸🥱",
     ],
     points: 0,
+    multiplier: 0,
   },
   {
     id: 'taylor-overrated',
@@ -117,6 +126,7 @@ export const avatars: Avatar[] = [
       'Her exes fear her more than tax season. 📜🔥',
     ],
     points: 0,
+    multiplier: 0,
   },
   {
     id: 'mark-zuckerbot',
@@ -129,6 +139,7 @@ export const avatars: Avatar[] = [
       'Made the Metaverse but wait, who asked for it? 🎮',
     ],
     points: 0,
+    multiplier: 0,
   },
   {
     id: 'joke-paul',
@@ -141,6 +152,7 @@ export const avatars: Avatar[] = [
       'Pranking reality, one viral fail at a time. 📹🤡',
     ],
     points: 0,
+    multiplier: 0,
   },
   {
     id: 'queen-lizardbeth',
@@ -153,6 +165,7 @@ export const avatars: Avatar[] = [
       'Immortal? Nah, just really, REALLY good at surviving. 🦎⚰️',
     ],
     points: 0,
+    multiplier: 0,
   },
   {
     id: 'greta-mchowdareyou',
@@ -165,6 +178,7 @@ export const avatars: Avatar[] = [
       'How dare YOU not recycle my memes?! ♻️😡',
     ],
     points: 0,
+    multiplier: 0,
   },
   {
     id: 'cardi-beef',
@@ -177,6 +191,7 @@ export const avatars: Avatar[] = [
       'Vocabulistics professor emeritus. 🗣️🤯',
     ],
     points: 0,
+    multiplier: 0,
   },
   {
     id: 'top-sparkle',
@@ -189,6 +204,7 @@ export const avatars: Avatar[] = [
       "1,000 pushups? His warmup's warmup. 💪🌍",
     ],
     points: 0,
+    multiplier: 0,
   },
   {
     id: 'boom-laden',
@@ -201,6 +217,7 @@ export const avatars: Avatar[] = [
       "Took 'OK Boomer' to a whole new level. 💣",
     ],
     points: 0,
+    multiplier: 0,
   },
   {
     id: 'donald-duck',
@@ -213,8 +230,6 @@ export const avatars: Avatar[] = [
       "Grabs headlines faster than he grabs 'em by the... well, you know. 🐈📰",
     ],
     points: 0,
+    multiplier: 0,
   },
-].map((el: Avatar, i, arr) => {
-  el.points = pointsArray(arr.length)[i];
-  return el;
-});
+]);
