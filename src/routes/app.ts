@@ -2,6 +2,7 @@ import { Router } from 'express';
 
 import { scenes } from '../constants/scenes';
 import { avatars } from '../constants/avatars';
+import { getTotalSupply } from '../utils/token';
 
 const routes = Router();
 
@@ -19,7 +20,13 @@ const routes = Router();
  */
 routes.get('/assets', async (_, res) => {
   try {
-    res.json({ scenes, avatars });
+    const supply = await getTotalSupply();
+    res.json({
+      scenes,
+      avatars,
+      supply,
+      address: process.env.TOKEN_MINT_ADDRESS,
+    });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: 'Sorry, something went wrong :/' });

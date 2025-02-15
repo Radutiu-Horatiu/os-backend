@@ -176,3 +176,8 @@ export const getUserWalletTokenBalance = async (address: string) => {
     return 0;
   }
 };
+
+export const getTotalSupply = async () => {
+  const tokenInfo = await connection.getTokenSupply(TOKEN_MINT_ADDRESS);
+  return tokenInfo.value.uiAmount;
+};
