@@ -19,7 +19,7 @@ const routes = Router();
 
 /**
  * @swagger
- * /user/claim_tokens:
+ * /user/claim:
  *   get:
  *     summary: Claim unclaimed tokens for a user
  *     tags: [Users]
@@ -58,7 +58,7 @@ const routes = Router();
  *                   type: string
  *                   example: Sorry, something went wrong :/
  */
-routes.get('/claim_tokens', async (req, res) => {
+routes.get('/claim', async (req, res) => {
   try {
     const walletAddress: string = req.headers['x-wallet-address'] as string;
 
@@ -90,7 +90,7 @@ routes.get('/claim_tokens', async (req, res) => {
     // partially sign transaction and send back to user
     const serializedTx = await prepareTokenTransaction(transfer);
 
-    res.json({ transaction: serializedTx, transferId });
+    res.json({ serializedTx, transferId });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: 'Sorry, something went wrong :/' });
@@ -131,7 +131,6 @@ routes.get('/', async (req, res) => {
       user = new UserModel({
         walletAddress,
         id: uuid(),
-        inWalletPoints: userWalletTokenBalance,
         hits: generateHits(HITS_PER_USER),
       });
       await user.save();
@@ -274,7 +273,7 @@ routes.post('/hits', async (req, res) => {
 
 /**
  * @swagger
- * /user/finalize_transfer:
+ * /user/finalize:
  *   post:
  *     summary: Finalize a transfer for a user
  *     tags: [Users]
@@ -301,7 +300,7 @@ routes.post('/hits', async (req, res) => {
  *       500:
  *         description: Sorry, something went wrong :/
  */
-routes.post('/finalize_transfer', async (req, res) => {
+routes.post('/finalize', async (req, res) => {
   try {
     const walletAddress = req.headers['x-wallet-address'];
 
@@ -336,19 +335,12 @@ routes.post('/finalize_transfer', async (req, res) => {
       if (user[type].includes(data.id))
         return res.status(400).json({ error: 'Item already bought.' });
 
-      // update in wallet points
+      // update user with new item
       user[type].push(data.id);
-      user.inWalletPoints -= transfer.amount;
+    }
 
-      // update off chain points
-      const pointsFromWalletDeduction = item.data.points - transfer.amount;
-      user.points -= pointsFromWalletDeduction;
-    }
-    // transferring points
-    else {
-      user.inWalletPoints += transfer.amount;
-      user.points = 0;
-    }
+    // if it's transfer or buy, points have been claimed either way
+    user.points = 0;
 
     // update transfer
     transfer.signature = signature;
@@ -365,7 +357,7 @@ routes.post('/finalize_transfer', async (req, res) => {
 
 /**
  * @swagger
- * /user/buy-item:
+ * /user/buy:
  *   post:
  *     summary: Buy an item using points
  *     tags: [Users]
@@ -387,15 +379,16 @@ routes.post('/finalize_transfer', async (req, res) => {
  *       500:
  *         description: Sorry, something went wrong :/
  */
-routes.post('/buy-item', async (req, res) => {
+routes.post('/buy', async (req, res) => {
   try {
     const walletAddress: string = req.headers['x-wallet-address'] as string;
 
     const { itemId } = req.body;
 
-    const [user, item] = await Promise.all([
+    const [user, item, userWalletTokenBalance] = await Promise.all([
       UserModel.findOne({ walletAddress }).exec(),
       getItemById(itemId),
+      getUserWalletTokenBalance(walletAddress),
     ]);
 
     if (!user) return res.status(400).json({ error: 'User not found.' });
@@ -404,44 +397,33 @@ routes.post('/buy-item', async (req, res) => {
 
     const { data, type }: ItemResult = item;
 
+    // already owns item
     if (user[type].includes(data.id))
       return res.status(400).json({ error: 'Item already bought.' });
 
-    // not enough total points
-    if (user.points + user.inWalletPoints <= data.points)
-      return res.status(400).json({ error: 'Not enough points.' });
+    // not enough points
+    if (userWalletTokenBalance <= data.points)
+      return res.status(400).json({ error: 'Not enough tokens, please claim first.' });
 
-    // buy item with unclaimed points
-    if (user.points >= data.points) {
-      user.points -= data.points;
-      user[type].push(data.id);
-      await user.save();
-      res.json({ transactionNeeded: false });
-    } else {
-      // calculate remaining points needed from inWalletPoints
-      const remainingPoints = data.points - user.points;
+    // prepare new transfer
+    const transferId = uuid();
+    const transfer: ITransfer = new TransferModel({
+      id: transferId,
+      address: walletAddress,
+      amount: item.data.points,
+      itemId: data.id,
+    });
 
-      // prepare new transfer to buy with inWalletPoints
-      const transferId = uuid();
-      const transfer: ITransfer = new TransferModel({
-        id: transferId,
-        address: walletAddress,
-        amount: remainingPoints,
-        itemId: data.id,
-      });
+    // store in db
+    await transfer.save();
 
-      // store in db
-      await transfer.save();
+    // prepare transaction which burns and buys the item
+    const serializedTx = await prepareBuyTransaction(transfer);
 
-      // partially sign transaction and send back to user
-      const serializedTx = await prepareBuyTransaction(transfer);
-
-      res.json({
-        transactionNeeded: true,
-        transaction: serializedTx,
-        transferId,
-      });
-    }
+    res.json({
+      serializedTx,
+      transferId,
+    });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: 'Sorry, something went wrong :/' });

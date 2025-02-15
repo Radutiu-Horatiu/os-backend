@@ -7,7 +7,7 @@ import { scenes } from '../constants/scenes';
 export const generateHits = (number: number, multiplier: number = 1): IHit[] =>
   Array.from({ length: number }, () => ({
     id: uuid(),
-    value: Math.floor((Math.random() * 10 + 1) * multiplier),
+    value: Math.floor((Math.random() * 10 + 1) * Math.max(multiplier, 1)),
   }));
 
 export const calculateMultiplier = (user: IUser): number => {
@@ -25,5 +25,5 @@ export const calculateMultiplier = (user: IUser): number => {
     if (currentScene) total += currentScene.multiplier;
   });
 
-  return Number(total.toFixed(1));
+  return Math.max(1, Number(total.toFixed(1)));
 };

@@ -11,7 +11,7 @@ export interface Scene {
 
 export const scenes: Cosmetic[] = addPointsAndMultiplier([
   {
-    id: 'tesla',
+    id: 'scene/tesla',
     name: 'Tesla F*cktory',
     src: `${process.env.CDN_URL}/scenes/tesla.jpg`,
     description: [
@@ -23,7 +23,7 @@ export const scenes: Cosmetic[] = addPointsAndMultiplier([
     multiplier: 0,
   },
   {
-    id: 'mcdonalds',
+    id: 'scene/mcdonalds',
     name: 'McDiabetes HQ',
     src: `${process.env.CDN_URL}/scenes/mcdonalds.jpg`,
     description: [
@@ -35,7 +35,7 @@ export const scenes: Cosmetic[] = addPointsAndMultiplier([
     multiplier: 0,
   },
   {
-    id: 'india',
+    id: 'scene/india',
     name: 'Spicy Street Food',
     src: `${process.env.CDN_URL}/scenes/india.jpg`,
     description: [
@@ -47,7 +47,7 @@ export const scenes: Cosmetic[] = addPointsAndMultiplier([
     multiplier: 0,
   },
   {
-    id: 'church',
+    id: 'scene/church',
     name: 'Holy Molly Temple',
     src: `${process.env.CDN_URL}/scenes/church.jpg`,
     description: [
@@ -59,7 +59,7 @@ export const scenes: Cosmetic[] = addPointsAndMultiplier([
     multiplier: 0,
   },
   {
-    id: 'couch',
+    id: 'scene/couch',
     name: 'The Couch',
     src: `${process.env.CDN_URL}/scenes/couch.jpg`,
     description: [
@@ -71,7 +71,7 @@ export const scenes: Cosmetic[] = addPointsAndMultiplier([
     multiplier: 0,
   },
   {
-    id: 'american',
+    id: 'scene/american',
     name: 'The American Dream',
     src: `${process.env.CDN_URL}/scenes/american.jpg`,
     description: [
@@ -83,7 +83,7 @@ export const scenes: Cosmetic[] = addPointsAndMultiplier([
     multiplier: 0,
   },
   {
-    id: 'korea',
+    id: 'scene/korea',
     name: 'Best Korea™',
     src: `${process.env.CDN_URL}/scenes/korea.jpg`,
     description: [
@@ -95,7 +95,7 @@ export const scenes: Cosmetic[] = addPointsAndMultiplier([
     multiplier: 0,
   },
   {
-    id: 'carnival',
+    id: 'scene/carnival',
     name: 'Clownpocalypse',
     src: `${process.env.CDN_URL}/scenes/carnival.jpg`,
     description: [
@@ -107,7 +107,7 @@ export const scenes: Cosmetic[] = addPointsAndMultiplier([
     multiplier: 0,
   },
   {
-    id: 'mars',
+    id: 'scene/mars',
     name: "Memelon Musk's Dream",
     src: `${process.env.CDN_URL}/scenes/mars.jpg`,
     description: [
@@ -119,7 +119,7 @@ export const scenes: Cosmetic[] = addPointsAndMultiplier([
     multiplier: 0,
   },
   {
-    id: 'powerplant',
+    id: 'scene/powerplant',
     name: 'Atomic AF',
     src: `${process.env.CDN_URL}/scenes/powerplant.jpg`,
     description: [
@@ -131,7 +131,7 @@ export const scenes: Cosmetic[] = addPointsAndMultiplier([
     multiplier: 0,
   },
   {
-    id: 'cotton',
+    id: 'scene/cotton',
     name: 'Plantation Unchained',
     src: `${process.env.CDN_URL}/scenes/cotton.jpg`,
     description: [
@@ -143,7 +143,7 @@ export const scenes: Cosmetic[] = addPointsAndMultiplier([
     multiplier: 0,
   },
   {
-    id: 'egypt',
+    id: 'scene/egypt',
     name: 'Pyramid Scheme',
     src: `${process.env.CDN_URL}/scenes/egypt.jpg`,
     description: [
@@ -155,7 +155,7 @@ export const scenes: Cosmetic[] = addPointsAndMultiplier([
     multiplier: 0,
   },
   {
-    id: 'area51',
+    id: 'scene/area51',
     name: 'Alien Hangout',
     src: `${process.env.CDN_URL}/scenes/area51.jpg`,
     description: [
@@ -167,7 +167,7 @@ export const scenes: Cosmetic[] = addPointsAndMultiplier([
     multiplier: 0,
   },
   {
-    id: 'florida',
+    id: 'scene/florida',
     name: "Florida Man's Backyard",
     src: `${process.env.CDN_URL}/scenes/florida.jpg`,
     description: [
@@ -179,7 +179,7 @@ export const scenes: Cosmetic[] = addPointsAndMultiplier([
     multiplier: 0,
   },
   {
-    id: 'prison',
+    id: 'scene/prison',
     name: 'Concrete Jungle Gym',
     src: `${process.env.CDN_URL}/scenes/prison.jpg`,
     description: [
@@ -191,7 +191,7 @@ export const scenes: Cosmetic[] = addPointsAndMultiplier([
     multiplier: 0,
   },
   {
-    id: 'hell',
+    id: 'scene/hell',
     name: 'Global Warming Is Real',
     src: `${process.env.CDN_URL}/scenes/hell.jpg`,
     description: [
@@ -203,7 +203,7 @@ export const scenes: Cosmetic[] = addPointsAndMultiplier([
     multiplier: 0,
   },
   {
-    id: 'playground',
+    id: 'scene/playground',
     name: 'Big Kids Playground',
     src: `${process.env.CDN_URL}/scenes/playground.jpg`,
     description: [
@@ -215,7 +215,7 @@ export const scenes: Cosmetic[] = addPointsAndMultiplier([
     multiplier: 0,
   },
   {
-    id: 'dubai',
+    id: 'scene/dubai',
     name: 'Desert Mall',
     src: `${process.env.CDN_URL}/scenes/dubai.jpg`,
     description: [

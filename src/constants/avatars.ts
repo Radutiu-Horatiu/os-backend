@@ -12,7 +12,7 @@ export interface Avatar {
 
 export const avatars: Cosmetic[] = addPointsAndMultiplier([
   {
-    id: 'memelon-musk',
+    id: 'avatar/memelon-musk',
     name: 'Memelon Musk',
     avatarUrl: `${process.env.CDN_URL}/avatars/elon.glb`,
     src: `${process.env.CDN_URL}/profiles/elon.png`,
@@ -25,7 +25,7 @@ export const avatars: Cosmetic[] = addPointsAndMultiplier([
     multiplier: 0,
   },
   {
-    id: 'will-smack',
+    id: 'avatar/will-smack',
     name: 'Will Smack',
     avatarUrl: `${process.env.CDN_URL}/avatars/will.glb`,
     src: `${process.env.CDN_URL}/profiles/will.png`,
@@ -38,7 +38,7 @@ export const avatars: Cosmetic[] = addPointsAndMultiplier([
     multiplier: 0,
   },
   {
-    id: 'shamber-turd',
+    id: 'avatar/shamber-turd',
     name: 'Shamber Turd',
     avatarUrl: `${process.env.CDN_URL}/avatars/amber.glb`,
     src: `${process.env.CDN_URL}/profiles/amber.png`,
@@ -51,7 +51,7 @@ export const avatars: Cosmetic[] = addPointsAndMultiplier([
     multiplier: 0,
   },
   {
-    id: 'kanye-mess',
+    id: 'avatar/kanye-mess',
     name: 'Kanye Mess',
     avatarUrl: `${process.env.CDN_URL}/avatars/kanye.glb`,
     src: `${process.env.CDN_URL}/profiles/kanye.png`,
@@ -64,7 +64,7 @@ export const avatars: Cosmetic[] = addPointsAndMultiplier([
     multiplier: 0,
   },
   {
-    id: 'jeff-bozos',
+    id: 'avatar/jeff-bozos',
     name: 'Jeff Baldzos',
     avatarUrl: `${process.env.CDN_URL}/avatars/jeff.glb`,
     src: `${process.env.CDN_URL}/profiles/jeff.png`,
@@ -77,7 +77,7 @@ export const avatars: Cosmetic[] = addPointsAndMultiplier([
     multiplier: 0,
   },
   {
-    id: 'chillary-defeaton',
+    id: 'avatar/chillary-defeaton',
     name: 'Chillary Defeaton',
     avatarUrl: `${process.env.CDN_URL}/avatars/hillary.glb`,
     src: `${process.env.CDN_URL}/profiles/hillary.png`,
@@ -90,7 +90,7 @@ export const avatars: Cosmetic[] = addPointsAndMultiplier([
     multiplier: 0,
   },
   {
-    id: 'joe-forgetful',
+    id: 'avatar/joe-forgetful',
     name: 'Forgetful Joe',
     avatarUrl: `${process.env.CDN_URL}/avatars/biden.glb`,
     src: `${process.env.CDN_URL}/profiles/biden.png`,
@@ -103,7 +103,7 @@ export const avatars: Cosmetic[] = addPointsAndMultiplier([
     multiplier: 0,
   },
   {
-    id: 'skim-kardashian',
+    id: 'avatar/skim-kardashian',
     name: 'Skim Kardashian',
     avatarUrl: `${process.env.CDN_URL}/avatars/kim.glb`,
     src: `${process.env.CDN_URL}/profiles/kim.png`,
@@ -116,7 +116,7 @@ export const avatars: Cosmetic[] = addPointsAndMultiplier([
     multiplier: 0,
   },
   {
-    id: 'taylor-overrated',
+    id: 'avatar/taylor-overrated',
     name: 'Taylor Overrated',
     avatarUrl: `${process.env.CDN_URL}/avatars/taylorswift.glb`,
     src: `${process.env.CDN_URL}/profiles/taylorswift.png`,
@@ -129,7 +129,7 @@ export const avatars: Cosmetic[] = addPointsAndMultiplier([
     multiplier: 0,
   },
   {
-    id: 'mark-zuckerbot',
+    id: 'avatar/mark-zuckerbot',
     name: 'Mark Zuckerbot',
     avatarUrl: `${process.env.CDN_URL}/avatars/mark.glb`,
     src: `${process.env.CDN_URL}/profiles/mark.png`,
@@ -142,7 +142,7 @@ export const avatars: Cosmetic[] = addPointsAndMultiplier([
     multiplier: 0,
   },
   {
-    id: 'joke-paul',
+    id: 'avatar/joke-paul',
     name: 'Joke Paul',
     avatarUrl: `${process.env.CDN_URL}/avatars/jake.glb`,
     src: `${process.env.CDN_URL}/profiles/jake.png`,
@@ -155,7 +155,7 @@ export const avatars: Cosmetic[] = addPointsAndMultiplier([
     multiplier: 0,
   },
   {
-    id: 'queen-lizardbeth',
+    id: 'avatar/queen-lizardbeth',
     name: 'Queen Lizardbeth',
     avatarUrl: `${process.env.CDN_URL}/avatars/queen.glb`,
     src: `${process.env.CDN_URL}/profiles/queen.png`,
@@ -168,7 +168,7 @@ export const avatars: Cosmetic[] = addPointsAndMultiplier([
     multiplier: 0,
   },
   {
-    id: 'greta-mchowdareyou',
+    id: 'avatar/greta-mchowdareyou',
     name: 'Greta McHowDareYou',
     avatarUrl: `${process.env.CDN_URL}/avatars/greta.glb`,
     src: `${process.env.CDN_URL}/profiles/greta.png`,
@@ -181,7 +181,7 @@ export const avatars: Cosmetic[] = addPointsAndMultiplier([
     multiplier: 0,
   },
   {
-    id: 'cardi-beef',
+    id: 'avatar/cardi-beef',
     name: 'Cardi Beef',
     avatarUrl: `${process.env.CDN_URL}/avatars/cardib.glb`,
     src: `${process.env.CDN_URL}/profiles/cardib.png`,
@@ -194,7 +194,7 @@ export const avatars: Cosmetic[] = addPointsAndMultiplier([
     multiplier: 0,
   },
   {
-    id: 'top-sparkle',
+    id: 'avatar/top-sparkle',
     name: 'Top Sparkle',
     avatarUrl: `${process.env.CDN_URL}/avatars/topg.glb`,
     src: `${process.env.CDN_URL}/profiles/topg.png`,
@@ -207,7 +207,7 @@ export const avatars: Cosmetic[] = addPointsAndMultiplier([
     multiplier: 0,
   },
   {
-    id: 'boom-laden',
+    id: 'avatar/boom-laden',
     name: 'Boom Laden',
     avatarUrl: `${process.env.CDN_URL}/avatars/osama.glb`,
     src: `${process.env.CDN_URL}/profiles/osama.png`,
@@ -220,7 +220,7 @@ export const avatars: Cosmetic[] = addPointsAndMultiplier([
     multiplier: 0,
   },
   {
-    id: 'donald-duck',
+    id: 'avatar/donald-duck',
     name: 'Donald Duck',
     avatarUrl: `${process.env.CDN_URL}/avatars/donald.glb`,
     src: `${process.env.CDN_URL}/profiles/donald.png`,

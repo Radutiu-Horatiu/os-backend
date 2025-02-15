@@ -9,7 +9,9 @@ import {
   getOrCreateAssociatedTokenAccount,
   createTransferInstruction,
   getAssociatedTokenAddress,
+  createBurnInstruction,
 } from '@solana/spl-token';
+import { createMemoInstruction } from '@solana/spl-memo';
 import bs58 from 'bs58';
 
 import { ITransfer } from '../models/transfer';
@@ -27,9 +29,10 @@ const TOKEN_MINT_ADDRESS = new PublicKey(
   process.env.TOKEN_MINT_ADDRESS as string
 );
 
+const DECIMALS: number = 9;
+
 const OWNER_PUBLIC_KEY = new PublicKey(process.env.PUBLIC_KEY as string);
 
-// Function to prepare token transaction
 export const prepareTokenTransaction = async (transferData: ITransfer) => {
   const { address, amount } = transferData;
 
@@ -54,11 +57,22 @@ export const prepareTokenTransaction = async (transferData: ITransfer) => {
     senderTokenAccount.address,
     recipientTokenAccount.address,
     payer.publicKey,
-    amount * 10 ** 9 // 9 decimals
+    amount * 10 ** DECIMALS
+  );
+
+  // Create memo instruction with details
+  const memoInstruction = createMemoInstruction(
+    JSON.stringify({
+      type: 'transfer',
+      amount: amount / 10 ** DECIMALS,
+    }),
+    [recipient]
   );
 
   // Create transaction
-  const transaction = new Transaction().add(transferInstruction);
+  const transaction = new Transaction()
+    .add(transferInstruction)
+    .add(memoInstruction);
 
   // Fetch recent blockhash
   const { blockhash } = await connection.getLatestBlockhash();
@@ -80,28 +94,56 @@ export const prepareBuyTransaction = async (
   const { amount, address } = transferData;
   const senderPublicKey = new PublicKey(address);
 
+  // Calculate burn amount (2%)
+  const burnAmount = Math.floor(amount * 0.02 * 10 ** DECIMALS);
+  const transferAmount = amount * 10 ** DECIMALS - burnAmount;
+
   // Get sender's associated token account (ATA)
   const senderTokenAccount = await getAssociatedTokenAddress(
     TOKEN_MINT_ADDRESS,
     senderPublicKey
   );
 
-  // Get recipient (owner's) associated token account (ATA)
-  const recipientTokenAccount = await getAssociatedTokenAddress(
+  // Get owner's associated token account (ATA)
+  const ownerTokenAccount = await getAssociatedTokenAddress(
     TOKEN_MINT_ADDRESS,
     OWNER_PUBLIC_KEY
   );
 
+  const transaction = new Transaction();
+
   // Create transfer instruction
-  const transferInstruction = createTransferInstruction(
+  const senderToOwnerInstruction = createTransferInstruction(
     senderTokenAccount,
-    recipientTokenAccount,
+    ownerTokenAccount,
     senderPublicKey,
-    amount * 10 ** 9 // Adjust for token decimals
+    transferAmount
   );
 
-  // Create transaction
-  const transaction = new Transaction().add(transferInstruction);
+  // Create burn instruction using SPL Token burn method
+  const burnInstruction = createBurnInstruction(
+    senderTokenAccount,
+    TOKEN_MINT_ADDRESS,
+    senderPublicKey,
+    burnAmount
+  );
+
+  // Create memo instruction with purchase details
+  const memoInstruction = createMemoInstruction(
+    JSON.stringify({
+      type: 'purchase',
+      item: transferData.itemId,
+      amount: transferAmount / 10 ** DECIMALS,
+      burned: burnAmount / 10 ** DECIMALS,
+    }),
+    [senderPublicKey]
+  );
+
+  // Add transfer and burn instructions
+  transaction
+    .add(senderToOwnerInstruction)
+    .add(burnInstruction)
+    .add(memoInstruction);
 
   // Fetch latest blockhash
   const { blockhash } = await connection.getLatestBlockhash();
@@ -114,7 +156,6 @@ export const prepareBuyTransaction = async (
     .toString('base64');
 };
 
-// Function to get user token balance
 export const getUserWalletTokenBalance = async (address: string) => {
   try {
     const userTokenAccount = await getOrCreateAssociatedTokenAccount(
