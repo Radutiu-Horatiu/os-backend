@@ -60,11 +60,11 @@ const UserSchema = new Schema({
   hits: [HitSchema],
   scenes: {
     type: [String],
-    default: [],
+    default: [scenes[0].id],
   },
   avatars: {
     type: [String],
-    default: [],
+    default: [avatars[0].id],
   },
 });
 
