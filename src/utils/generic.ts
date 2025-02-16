@@ -25,6 +25,7 @@ export const addPointsAndMultiplier = async (
   return cosmetics.map((el: Cosmetic, i, arr) => {
     el.points = progressiveValues(arr.length, 1.65, 500)[i];
     el.points += el.points * supplyPercentageChange;
+    el.points = Math.round(el.points);
     el.multiplier = progressiveValues(arr.length, 1.25, 1)[i];
     return el;
   });
