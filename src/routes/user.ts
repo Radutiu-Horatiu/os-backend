@@ -4,16 +4,13 @@ import { v4 as uuid } from 'uuid';
 import { UserModel, IUser, IHit } from '../models/user';
 import { calculateMultiplier, generateHits } from '../utils/hits';
 import {
+  getSupplyPercentageChange,
   getUserWalletTokenBalance,
   prepareBuyTransaction,
   prepareTokenTransaction,
 } from '../utils/token';
 import { ITransfer, TransferModel } from '../models/transfer';
 import { getItemById, ItemResult } from '../utils/items';
-
-const HITS_PER_USER: number = 20;
-
-const MAX_CLAIMABLE_POINTS: number = 1000000;
 
 const routes = Router();
 
@@ -62,19 +59,12 @@ routes.get('/claim', async (req, res) => {
   try {
     const walletAddress: string = req.headers['x-wallet-address'] as string;
 
-    const [user, userWalletTokenBalance] = await Promise.all([
-      UserModel.findOne({ walletAddress }).exec(),
-      getUserWalletTokenBalance(walletAddress),
-    ]);
+    const user = await UserModel.findOne({ walletAddress }).exec();
 
     if (!user) return res.status(404).json({ error: 'User not found.' });
 
     if (user.points <= 0)
       return res.status(400).json({ error: 'No unclaimed points.' });
-
-    // Points limit
-    if (userWalletTokenBalance > MAX_CLAIMABLE_POINTS)
-      return res.status(400).json({ error: 'Points limit reached.' });
 
     // prepare new transfer
     const transferId = uuid();
@@ -121,9 +111,10 @@ routes.get('/', async (req, res) => {
       return res.status(400).json({ error: 'Wallet address not provided' });
 
     // Find user and get token balance
-    let [user, userWalletTokenBalance] = await Promise.all([
+    let [user, userWalletTokenBalance, percentageChange] = await Promise.all([
       UserModel.findOne({ walletAddress }).exec(),
       getUserWalletTokenBalance(walletAddress),
+      getSupplyPercentageChange(),
     ]);
 
     // Create a new user if not found
@@ -131,7 +122,9 @@ routes.get('/', async (req, res) => {
       user = new UserModel({
         walletAddress,
         id: uuid(),
-        hits: generateHits(HITS_PER_USER),
+        hits: generateHits({
+          percentageChange,
+        }),
       });
       await user.save();
     }
@@ -142,7 +135,9 @@ routes.get('/', async (req, res) => {
     // Convert user document to plain object
     const userObject = user.toObject();
 
-    return res.json({ ...userObject, multiplier: calculateMultiplier(user) });
+    const multiplier = await calculateMultiplier(user);
+
+    return res.json({ ...userObject, multiplier });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: 'Sorry, something went wrong :/' });
@@ -233,13 +228,18 @@ routes.post('/hits', async (req, res) => {
     const walletAddress: string = req.headers['x-wallet-address'] as string;
     const hitsToRemove: IHit[] = req.body;
 
-    const user = await UserModel.findOne({ walletAddress }).exec();
+    let [user, percentageChange] = await Promise.all([
+      UserModel.findOne({ walletAddress }).exec(),
+      getSupplyPercentageChange(),
+    ]);
 
     if (!user) return res.status(404).json({ error: 'User not found' });
 
     // Calculate total value of hits to remove
     let totalValue = 0;
     hitsToRemove.forEach((hit) => {
+      if (!user) return;
+
       const index = user.hits.findIndex((userHit) => userHit.id === hit.id);
       if (index !== -1) {
         const hitValue = user.hits[index].value;
@@ -256,8 +256,13 @@ routes.post('/hits', async (req, res) => {
       }
     });
 
+    const multiplier = await calculateMultiplier(user);
+
     // Generate new hits
-    const newHits = generateHits(HITS_PER_USER, calculateMultiplier(user));
+    const newHits = generateHits({
+      multiplier,
+      percentageChange,
+    });
 
     user.hits = newHits;
     user.points += totalValue;
@@ -326,7 +331,7 @@ routes.post('/finalize', async (req, res) => {
 
     // transferring an item
     if (transfer.itemId) {
-      const item = getItemById(transfer.itemId);
+      const item = await getItemById(transfer.itemId);
 
       if (!item) return res.status(404).json({ error: 'Item not found' });
 
@@ -403,7 +408,7 @@ routes.post('/buy', async (req, res) => {
 
     // not enough points
     if (userWalletTokenBalance <= data.points)
-      return res.status(400).json({ error: 'Not enough tokens, please claim first.' });
+      return res.status(400).json({ error: 'Please claim tokens first.' });
 
     // prepare new transfer
     const transferId = uuid();

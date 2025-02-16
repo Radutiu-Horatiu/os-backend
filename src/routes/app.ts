@@ -1,8 +1,8 @@
 import { Router } from 'express';
 
-import { scenes } from '../constants/scenes';
-import { avatars } from '../constants/avatars';
-import { getTotalSupply } from '../utils/token';
+import { getScenes } from '../constants/scenes';
+import { getAvatars } from '../constants/avatars';
+import { getCurrentSupply } from '../utils/token';
 
 const routes = Router();
 
@@ -20,12 +20,15 @@ const routes = Router();
  */
 routes.get('/assets', async (_, res) => {
   try {
-    const supply = await getTotalSupply();
+    const supply = await getCurrentSupply();
+    const avatars = await getAvatars();
+    const scenes = await getScenes();
+
     res.json({
       scenes,
       avatars,
       supply,
-      address: process.env.TOKEN_MINT_ADDRESS,
+      tokenUrl: `https://solscan.io/token/${process.env.TOKEN_MINT_ADDRESS}?cluster=devnet`,
     });
   } catch (error) {
     console.error(error);

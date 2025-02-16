@@ -1,5 +1,5 @@
-import { avatars } from '../constants/avatars';
-import { scenes } from '../constants/scenes';
+import { getAvatars } from '../constants/avatars';
+import { getScenes } from '../constants/scenes';
 
 export enum ItemType {
   Avatar = 'avatars',
@@ -11,7 +11,10 @@ export interface ItemResult {
   type: ItemType;
 }
 
-export const getItemById = (id: string) => {
+export const getItemById = async (id: string): Promise<ItemResult | null> => {
+  const avatars = await getAvatars();
+  const scenes = await getScenes();
+
   const avatar = avatars.find((item) => item.id === id);
   const scene = scenes.find((item) => item.id === id);
 

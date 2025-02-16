@@ -10,7 +10,7 @@ export interface Avatar {
   multiplier: number;
 }
 
-export const avatars: Cosmetic[] = addPointsAndMultiplier([
+export const rawAvatars: Avatar[] = [
   {
     id: 'avatar/memelon-musk',
     name: 'Memelon Musk',
@@ -232,4 +232,7 @@ export const avatars: Cosmetic[] = addPointsAndMultiplier([
     points: 0,
     multiplier: 0,
   },
-]);
+];
+
+export const getAvatars = async (): Promise<Cosmetic[]> =>
+  await addPointsAndMultiplier(rawAvatars);

@@ -1,6 +1,6 @@
 import { model, Schema, Document } from 'mongoose';
-import { scenes } from '../constants/scenes';
-import { avatars } from '../constants/avatars';
+import { rawScenes } from '../constants/scenes';
+import { rawAvatars } from '../constants/avatars';
 
 const HitSchema = new Schema({
   id: {
@@ -60,11 +60,11 @@ const UserSchema = new Schema({
   hits: [HitSchema],
   scenes: {
     type: [String],
-    default: [scenes[0].id],
+    default: [rawScenes[0].id],
   },
   avatars: {
     type: [String],
-    default: [avatars[0].id],
+    default: [rawAvatars[0].id],
   },
 });
 

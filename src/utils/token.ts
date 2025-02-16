@@ -31,6 +31,10 @@ const TOKEN_MINT_ADDRESS = new PublicKey(
 
 const DECIMALS: number = 9;
 
+const BURN_PERCENTAGE: number = 0.02;
+
+const INITIAL_TOKEN_SUPPLY: number = 10_000_000_000;
+
 const OWNER_PUBLIC_KEY = new PublicKey(process.env.PUBLIC_KEY as string);
 
 export const prepareTokenTransaction = async (transferData: ITransfer) => {
@@ -94,8 +98,12 @@ export const prepareBuyTransaction = async (
   const { amount, address } = transferData;
   const senderPublicKey = new PublicKey(address);
 
-  // Calculate burn amount (2%)
-  const burnAmount = Math.floor(amount * 0.02 * 10 ** DECIMALS);
+  const supplyPercentageChange = await getSupplyPercentageChange();
+
+  // Calculate burn amount
+  let burnAmount = amount * BURN_PERCENTAGE * 10 ** DECIMALS;
+  burnAmount += Math.floor(burnAmount * supplyPercentageChange);
+
   const transferAmount = amount * 10 ** DECIMALS - burnAmount;
 
   // Get sender's associated token account (ATA)
@@ -177,7 +185,15 @@ export const getUserWalletTokenBalance = async (address: string) => {
   }
 };
 
-export const getTotalSupply = async () => {
+export const getCurrentSupply = async (): Promise<number> => {
   const tokenInfo = await connection.getTokenSupply(TOKEN_MINT_ADDRESS);
+  if (!tokenInfo.value.uiAmount) return 0;
   return tokenInfo.value.uiAmount;
+};
+
+export const getSupplyPercentageChange = async (): Promise<number> => {
+  const currentSupply = await getCurrentSupply();
+  const percentageChange =
+    (INITIAL_TOKEN_SUPPLY - currentSupply) / INITIAL_TOKEN_SUPPLY;
+  return percentageChange;
 };

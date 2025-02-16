@@ -9,7 +9,7 @@ export interface Scene {
   multiplier: number;
 }
 
-export const scenes: Cosmetic[] = addPointsAndMultiplier([
+export const rawScenes: Scene[] = [
   {
     id: 'scene/tesla',
     name: 'Tesla F*cktory',
@@ -226,4 +226,7 @@ export const scenes: Cosmetic[] = addPointsAndMultiplier([
     points: 0,
     multiplier: 0,
   },
-]);
+];
+
+export const getScenes = async (): Promise<Cosmetic[]> =>
+  await addPointsAndMultiplier(rawScenes);
