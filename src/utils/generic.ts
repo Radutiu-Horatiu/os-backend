@@ -12,9 +12,9 @@ export const progressiveValues = (
   const arr = [startValue];
   for (let i = 1; i < n; i++) {
     const value = arr[i - 1] * multiplier;
-    arr.push(Number(value.toFixed(1)));
+    arr.push(value);
   }
-  return arr;
+  return arr.map((el) => Math.round(el));
 };
 
 export const addPointsAndMultiplier = async (
@@ -23,9 +23,12 @@ export const addPointsAndMultiplier = async (
   const supplyPercentageChange = await getSupplyPercentageChange();
 
   return cosmetics.map((el: Cosmetic, i, arr) => {
+    // calculate points
     el.points = progressiveValues(arr.length, 1.65, 500)[i];
     el.points += el.points * supplyPercentageChange;
     el.points = Math.round(el.points);
+
+    // calculate multiplier
     el.multiplier = progressiveValues(arr.length, 1.25, 1)[i];
     return el;
   });
