@@ -13,7 +13,23 @@ const HitSchema = new Schema({
   },
 });
 
+const ClaimSchema = new Schema({
+  id: {
+    type: String,
+    required: true,
+  },
+  value: {
+    type: Number,
+    default: 0,
+  },
+});
+
 interface IHit {
+  id: string;
+  value: number;
+}
+
+interface IClaim {
   id: string;
   value: number;
 }
@@ -26,6 +42,7 @@ interface IUser extends Document {
   avatar: string;
   scene: string;
   hits: IHit[];
+  claims: IClaim[];
   scenes: string[];
   avatars: string[];
 }
@@ -58,6 +75,7 @@ const UserSchema = new Schema({
     default: null,
   },
   hits: [HitSchema],
+  claims: [ClaimSchema],
   scenes: {
     type: [String],
     default: [rawScenes[0].id],
@@ -70,4 +88,4 @@ const UserSchema = new Schema({
 
 const UserModel = model<IUser>('User', UserSchema);
 
-export { UserModel, IUser, IHit };
+export { UserModel, IUser, IHit, IClaim };

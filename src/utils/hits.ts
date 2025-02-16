@@ -17,7 +17,8 @@ export const generateHits = ({
 }: GenerateHitsParams): IHit[] =>
   Array.from({ length: HITS_PER_USER }, () => {
     let value = (Math.random() * 10 + 1) * Math.max(multiplier, 1);
-    value -= Math.floor(value * percentageChange);
+    value -= value * percentageChange;
+    value = Math.floor(value);
     return {
       id: uuid(),
       value,

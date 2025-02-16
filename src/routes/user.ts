@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { v4 as uuid } from 'uuid';
 
-import { UserModel, IUser, IHit } from '../models/user';
+import { UserModel, IUser, IHit, IClaim } from '../models/user';
 import { calculateMultiplier, generateHits } from '../utils/hits';
 import {
   getSupplyPercentageChange,
@@ -13,6 +13,8 @@ import { ITransfer, TransferModel } from '../models/transfer';
 import { getItemById, ItemResult } from '../utils/items';
 
 const routes = Router();
+
+const DAILY_CLAIM_LIMIT: number = 500_000;
 
 /**
  * @swagger
@@ -65,6 +67,13 @@ routes.get('/claim', async (req, res) => {
 
     if (user.points <= 0)
       return res.status(400).json({ error: 'No unclaimed points.' });
+
+    // today's claim check
+    const date = new Date().toLocaleDateString();
+    const dailyClaim = user.claims.find((c: IClaim) => c.id === date);
+
+    if (dailyClaim && dailyClaim?.value > DAILY_CLAIM_LIMIT)
+      return res.status(400).json({ error: 'Daily claim limit reached.' });
 
     // prepare new transfer
     const transferId = uuid();
@@ -349,6 +358,17 @@ routes.post('/finalize', async (req, res) => {
 
     // update transfer
     transfer.signature = signature;
+
+    // store today's claim
+    const date = new Date().toLocaleDateString();
+
+    const todaysClaimIndex = user.claims.findIndex(
+      (c: IClaim) => c.id === date
+    );
+
+    if (todaysClaimIndex === -1)
+      user.claims.push({ id: date, value: transfer.amount });
+    else user.claims[todaysClaimIndex].value += transfer.amount;
 
     await transfer.save();
     await user.save();
